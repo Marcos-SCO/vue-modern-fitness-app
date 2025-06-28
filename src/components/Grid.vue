@@ -1,8 +1,8 @@
-<script scope>
+<script setup>
 </script>
 
 <template>
-
+GRID
 </template>
 
 <style scoped>

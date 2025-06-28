@@ -15,6 +15,7 @@
       <img src="https://avatars.githubusercontent.com/u/49601513?v=4" alt="Marcos-sco" />
 
       <p>Marcos-sco</p>
+      <i class="fa-brands fa-github"></i>
     </a>
   </footer>
 </template>
