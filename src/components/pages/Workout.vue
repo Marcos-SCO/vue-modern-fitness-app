@@ -3,7 +3,15 @@
   import Portal from "../Portal.vue";
   import { workoutProgram, exerciseDescriptions } from "../../utils";
 
-  const selectedWorkout = 2;
+  const workoutType = ['Push', "Pull", 'Legs'];
+
+  const { data, selectedWorkout, handleSaveWorkout, isWorkoutComplete } = defineProps({
+    data: Object,
+    selectedWorkout: Number,
+    handleSaveWorkout: Function,
+    isWorkoutComplete: Boolean,
+  });
+
   const { workout, warmup } = workoutProgram[selectedWorkout];
 
   const selectedExercise = ref(null);
@@ -36,12 +44,12 @@
   <div id="workout-card">
     <div class="plan-card card">
       <div class="pan-card-header">
-        <p>Day {{ selectedWorkout < 9 ? "0" + selectedWorkout : selectedWorkout }}</p>
+        <p>Day {{ selectedWorkout < 9 ? "0" + (selectedWorkout + 1) : selectedWorkout + 1 }}</p>
 
         <i class="fa-solid fa-dumbbell"></i>
       </div>
 
-      <h2>{{ "Push" }} Workout</h2>
+      <h2>{{ workoutType[selectedWorkout % 3] }} Workout</h2>
     </div>
 
     <div class="workout-grid">
@@ -69,6 +77,7 @@
       <h4 class="grid-name">Workout</h4>
       <h6>Sets</h6>
       <h6>Reps</h6>
+      <h6 class="grid-weights">Weights</h6>
 
       <div :key="wIdx" class="workout-grid-row" v-for="(w, wIdx) in workout">
         <div class="grid-name">
@@ -82,14 +91,16 @@
         <p>{{ w.sets }}</p>
         <p>{{ w.reps }}</p>
 
-        <input type="text" class="grid-weights" placeholder="14kg" />
+        <input v-model="data[selectedWorkout][w.name]" type="text" class="grid-weights" placeholder="14kg" />
       </div>
     </div>
 
     <div class="card workout-btns">
-      <button>Save & Exit <i class="fa-solid fa-save"></i></button>
+      <button @click="handleSaveWorkout">Save & Exit <i class="fa-solid fa-save"></i></button>
 
-      <button>Complete <i class="fa-solid fa-check"></i></button>
+      <button :disabled="!isWorkoutComplete" @click="handleSaveWorkout">
+        Complete <i class="fa-solid fa-check"></i>
+      </button>
     </div>
   </div>
 </template>
