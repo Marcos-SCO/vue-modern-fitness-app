@@ -1,26 +1,35 @@
 <script setup>
+  import { ref, computed } from "vue";
   import Portal from "../Portal.vue";
   import { workoutProgram, exerciseDescriptions } from "../../utils";
 
   const selectedWorkout = 2;
   const { workout, warmup } = workoutProgram[selectedWorkout];
 
-  const selectedExercise = "Lat pull down";
-  // const selectedExercise = null;
-  const exerciseDescription = exerciseDescriptions[selectedExercise];
+  const selectedExercise = ref(null);
+
+  const exerciseDescription = computed(() => exerciseDescriptions[selectedExercise.value]);
+
+  function showRearModal(exercise) {
+    selectedExercise.value = exercise.name;
+  }
+
+  function handleCloseModal() {
+    selectedExercise.value = null;
+  }
 </script>
 
 <template>
-  <Portal v-if="selectedExercise">
+  <Portal :handleCloseModal="handleCloseModal" v-if="selectedExercise">
     <div class="exercise-description">
-        <h4>{{ selectedExercise }}</h4>
+      <h4>{{ selectedExercise }}</h4>
 
-        <div>
-            <small>Description</small>
-            <p>{{ exerciseDescription }}</p>
-        </div>
+      <div>
+        <small>Description</small>
+        <p>{{ exerciseDescription }}</p>
+      </div>
 
-        <button>Close <i class="fa-solid fa-xmark"></i></button>
+      <button @click="handleCloseModal">Close <i class="fa-solid fa-xmark"></i></button>
     </div>
   </Portal>
 
@@ -44,7 +53,7 @@
       <div :key="wIdx" class="workout-grid-row" v-for="(w, wIdx) in warmup">
         <div class="grid-name">
           <p>{{ w.name }}</p>
-          <button>
+          <button @click="showRearModal(w)">
             <i class="fa-regular fa-circle-question"></i>
           </button>
         </div>
@@ -64,7 +73,8 @@
       <div :key="wIdx" class="workout-grid-row" v-for="(w, wIdx) in workout">
         <div class="grid-name">
           <p>{{ w.name }}</p>
-          <button>
+
+          <button @click="showRearModal(w)">
             <i class="fa-regular fa-circle-question"></i>
           </button>
         </div>
@@ -162,10 +172,15 @@
   .exercise-description {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .exercise-description h3 {
+    text-transform: capitalize;
   }
 
   .exercise-description button i {
-    padding-left: .5rem;
+    padding-left: 0.5rem;
   }
 </style>
